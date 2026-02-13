@@ -1,10 +1,10 @@
-*docker build <Dockerfile>* requires a directory
-  builds immutable images of Docker containers
+*docker build <Dockerfile>* requires a directory \n
+  builds immutable images of Docker containers /n 
 *docker images* or *docker image ls* to list built containers 
 *docker system prune --volumes* removes all 
   removes stopped containers and peripheral unused containers/volumes
 *docker system prune -a --volumes* removes all container images
-*docker buildx build -t <repo>:<tag> --load* builds with repo and tag listed for referencing and pruning. Loads single platform builds to docker
+*docker buildx build <directory_path> -t <repo>:<tag> --load* builds with repo and tag listed for referencing and pruning. Loads single platform builds to Docker
 
 
 
