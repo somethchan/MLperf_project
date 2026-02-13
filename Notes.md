@@ -1,4 +1,4 @@
-*docker build <Dockerfile>* requires a directory
+*docker build <Dockerfile>* requires a directory <br>
   builds immutable images of Docker containers
 *docker images* or *docker image ls* to list built containers 
 *docker system prune --volumes* removes all 
