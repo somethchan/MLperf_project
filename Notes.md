@@ -4,7 +4,7 @@
 *docker system prune --volumes* removes all <br>
   removes stopped containers and peripheral unused containers/volumes <br>
 *docker system prune -a --volumes* removes all container images <br>
-*docker buildx build [directory_path] -t [repo]:[tag]--load* builds with repo and tag listed for referencing and pruning. Loads single platform builds to Docker <br>
+*docker buildx build [directory_path] -t [repo]:[tag]--load* builds with repo and tag listed for referencing. --Loads single platform builds to Docker <br>
 
 
 
