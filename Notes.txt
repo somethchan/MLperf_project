@@ -1,5 +1,5 @@
-*docker build <Dockerfile>* requires a directory \n
-  builds immutable images of Docker containers /n 
+*docker build <Dockerfile>* requires a directory
+  builds immutable images of Docker containers
 *docker images* or *docker image ls* to list built containers 
 *docker system prune --volumes* removes all 
   removes stopped containers and peripheral unused containers/volumes
