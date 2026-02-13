@@ -1,5 +1,5 @@
 *docker build [Dockerfile]* requires a directory
-&emsp builds immutable images of Docker containers <br>
+<&emsp> builds immutable images of Docker containers <br>
 *docker images* or *docker image ls* to list built containers <br>
 *docker system prune --volumes* removes all <br>
   removes stopped containers and peripheral unused containers/volumes <br>
