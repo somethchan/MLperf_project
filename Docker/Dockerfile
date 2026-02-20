@@ -25,22 +25,24 @@ RUN python3 -m pip install --no-cache-dir \
     --index-url https://download.pytorch.org/whl/cu121
 
 # INSTALL CM AUTOMATION
-RUN python3 -m pip install --no-cache-dir cmind
+RUN python3 -m pip install --no-cache-dir \
+    numpy pyyaml cmind
+
+# CM AUTOMATION
 RUN cm pull repo mlcommons@cm4mlops
 
-# INSTALL NSIGHT
+# NSIGHT SYSTEM CLI
 RUN set -eux; \
-    mkdir -p /etc/apt/keyrings; \
-    curl -fsSL https://developer.download.nvidia.com/devtools/repos/ubuntu2204/amd64/nvidia-devtools.gpg \
-      | gpg --dearmor -o /etc/apt/keyrings/nvidia-devtools.gpg; \
-    echo "deb [signed-by=/etc/apt/keyrings/nvidia-devtools.gpg] https://developer.download.nvidia.com/devtools/repos/ubuntu2204/amd64/ /" \
-      > /etc/apt/sources.list.d/nvidia-devtools.list; \
+    NSYS_DEB="NsightSystems-linux-cli-public-2026.1.1.204-3717666.deb"; \
+    curl -fL -o /tmp/nsys.deb "https://developer.download.nvidia.com/devtools/repos/ubuntu2204/amd64/${NSYS_DEB}"; \
     apt-get update; \
-    apt-get install -y --no-install-recommends nsight-systems; \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends /tmp/nsys.deb; \
+    rm -f /tmp/nsys.deb; \
+    rm -rf /var/lib/apt/lists/*; \
+    nsys --version
 
 # SET WORKDIR
 WORKDIR /workspace
 
 # Default command
-CMD ["/bin/bash"]
+CMD ["sleep", "infinity"]
