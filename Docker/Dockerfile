@@ -6,6 +6,13 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
+# MAKE THINGS DETERMINISTIC
+ENV CUBLAS_WORKSPACE_CONFIG=:4096:8 \
+    CUDNN_DETERMINISTIC=1 \
+    PYTORCH_CUDA_ALLOC_CONF=expandable_segments:False \
+    CUDA_DEVICE_MAX_CONNECTIONS=1 \
+    CUDA_VISIBLE_DEVICES=0
+
 # INSTALL OS DEPENDANCIES
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 python3-pip python3-venv \
