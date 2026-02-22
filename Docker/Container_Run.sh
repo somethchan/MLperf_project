@@ -1,4 +1,9 @@
 docker run -it --gpus all \
   --cap-add=SYS_ADMIN \
   --security-opt seccomp=unconfined \
-   f9e7195e2020 bash
+  -v $(pwd)/mlperf_data:/datasets \
+  -v $(pwd)/mlperf_models:/models \
+  -v $(pwd)/mlperf_results:/results \
+  -v $(pwd)/mlperf_chace:/cache \
+  -w /workspace \
+  f9e7195e2020 bash
