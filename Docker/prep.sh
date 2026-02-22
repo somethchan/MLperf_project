@@ -1,0 +1,1 @@
+mkdir mlperf_data mlperf_models mlperf_results mlperf_cache
