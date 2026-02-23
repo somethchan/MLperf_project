@@ -4,37 +4,29 @@ import torch
 import torchvision
 import torch.cuda.nvtx as nvtx
 
-# -----------------------------
-# Determinism / stability knobs
-# -----------------------------
+# Set deterministic
 torch.use_deterministic_algorithms(True)
 torch.backends.cudnn.benchmark = False
 torch.backends.cuda.matmul.allow_tf32 = False
-torch.backends.cudnn.allow_tf32 = False  # keep consistent
-
-# Optional: reduce noise a bit
+torch.backends.cudnn.allow_tf32 = False
 torch.set_num_threads(1)
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 assert device == "cuda", "This script expects a CUDA GPU."
 
-# -----------------------------
-# Model: ResNet50
-# -----------------------------
+# RESNET-50
 model = torchvision.models.resnet50(weights=None)
 model.eval().to(device)
 
-# Fixed input shape (MLPerf-style image tensor)
+# Input Shape DO NOT CHANGE
 batch_size = int(os.environ.get("BATCH_SIZE", "1"))
 inp = torch.randn(batch_size, 3, 224, 224, device=device, dtype=torch.float32)
 
-# -----------------------------
-# Run settings
-# -----------------------------
+# Phase out warmup
 warmup = int(os.environ.get("WARMUP_ITERS", "20"))
 iters  = int(os.environ.get("ITERS", "50"))
 
-# Warmup (NOT profiled if you use NVTX capture-range)
+# Warmup 
 with torch.no_grad():
     for _ in range(warmup):
         _ = model(inp)
