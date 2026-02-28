@@ -6,8 +6,7 @@
 *docker system prune -a --volumes* removes all container images <br>
 *docker buildx build [directory_path] -t [repo]:[tag]--load* builds with repo and tag listed for referencing. --Loads single platform builds to Docker <br>
 CMD ["sleep", "infinity"] over CMD ["/bin/bash"] otherwise TTY need to be assigned on run with -it
-
-
+*docker rmi <image-id> removes images*
 
 buildx version warning: not important
 
