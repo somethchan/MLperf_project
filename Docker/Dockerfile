@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
+
 # MAKE THINGS DETERMINISTIC
 ENV CUBLAS_WORKSPACE_CONFIG=:4096:8 \
     CUDNN_DETERMINISTIC=1 \
@@ -37,6 +38,16 @@ RUN python3 -m pip install --no-cache-dir \
 
 # CM AUTOMATION
 RUN cm pull repo mlcommons@cm4mlops
+
+RUN python3 - <<'PY'
+import pathlib
+p = pathlib.Path("/root/CM/repos/mlcommons@cm4mlops/automation/script/module.py")
+txt = p.read_text()
+txt = txt.replace("','.join(meta['tags'])",
+                  "','.join([str(t) for t in meta.get('tags', [])])")
+p.write_text(txt)
+print("Patched", p)
+PY
 
 # NSIGHT SYSTEM CLI
 RUN set -eux; \
