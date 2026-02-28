@@ -1,1 +1,10 @@
-
+cm run script --path=/root/CM/repos/mlcommons@cm4mlops/script/run-mlperf-inference-app \
+  --model=bert \
+  --scenario=Offline \
+  --test=performance \
+  --precision=fp32 \
+  --device=cuda \
+  --dataset_dir=/datasets \
+  --model_dir=/models \
+  --results_dir=/results \
+  --cache_dir=/cache
