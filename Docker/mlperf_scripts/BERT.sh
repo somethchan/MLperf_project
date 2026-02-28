@@ -1,10 +1,15 @@
-cm run script --path=/root/CM/repos/mlcommons@cm4mlops/script/run-mlperf-inference-app \
-  --model=bert \
+#!/usr/bin/env bash
+set -euo pipefail
+
+cm run script --tags=run-mlperf,inference \
+  --model=bert-99 \
   --scenario=Offline \
-  --test=performance \
-  --precision=fp32 \
+  --mode=performance \
+  --execution_mode=valid \
   --device=cuda \
+  --precision=float32 \
   --dataset_dir=/datasets \
   --model_dir=/models \
   --results_dir=/results \
-  --cache_dir=/cache
+  --cache_dir=/cache \
+  --quiet
