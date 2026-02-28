@@ -43,7 +43,7 @@ ENV CM_GIT_CHECKOUT=v4.1
 RUN git clone -b v4.1 --depth 1 https://github.com/mlcommons/inference.git /opt/mlperf_inference
 ENV CM_MLPERF_INFERENCE_SRC=/opt/mlperf_inference
 
-# PATCH: CM tag/type mismatch bug (keep)
+# PATCH: CM tag/type mismatch bug
 RUN python3 - <<'PY'
 import pathlib
 p = pathlib.Path("/root/CM/repos/mlcommons@cm4mlops/automation/script/module.py")
@@ -54,7 +54,7 @@ p.write_text(txt)
 print("Patched", p)
 PY
 
-# PATCH: tolerate submission checker filename changes (THIS FIXES YOUR CRASH)
+# PATCH: tolerate submission checker filename changes
 RUN python3 - <<'PY'
 import pathlib, re
 
