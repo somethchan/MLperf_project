@@ -1,0 +1,152 @@
+# IMPORTS
+FROM nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04
+
+# SET ENVIRONMENT
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+
+# MAKE THINGS DETERMINISTIC
+ENV CUBLAS_WORKSPACE_CONFIG=:4096:8 \
+    CUDNN_DETERMINISTIC=1 \
+    PYTORCH_CUDA_ALLOC_CONF=expandable_segments:False \
+    CUDA_DEVICE_MAX_CONNECTIONS=1 \
+    CUDA_VISIBLE_DEVICES=0
+
+# INSTALL OS DEPENDANCIES
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 python3-pip python3-venv \
+    git wget curl ca-certificates \
+    build-essential \
+    nano \
+    unzip rsync \
+    libglib2.0-0 libgomp1 \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+# INSTALL PYTHON DEPENDANCIES
+RUN python3 -m pip install -U pip setuptools wheel
+
+# INSTALL PYTORCH
+RUN python3 -m pip install --no-cache-dir \
+    torch torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/cu121
+
+# INSTALL CM AUTOMATION
+RUN python3 -m pip install --no-cache-dir \
+    numpy pyyaml cmind
+
+# CM AUTOMATION
+RUN cm pull repo mlcommons@cm4mlops
+
+ENV CM_GIT_CHECKOUT=v4.1
+
+RUN git clone -b v4.1 --depth 1 https://github.com/mlcommons/inference.git /opt/mlperf_inference
+
+ENV CM_MLPERF_INFERENCE_SRC=/opt/mlperf_inference
+
+# PATCH PYTHON VARIABLE MISMATCH ERROR
+RUN python3 - <<'PY'
+import pathlib
+p = pathlib.Path("/root/CM/repos/mlcommons@cm4mlops/automation/script/module.py")
+txt = p.read_text()
+txt = txt.replace("','.join(meta['tags'])",
+                  "','.join([str(t) for t in meta.get('tags', [])])")
+p.write_text(txt)
+print("Patched", p)
+PY
+
+# NSIGHT SYSTEM CLI
+RUN set -eux; \
+    NSYS_DEB="NsightSystems-linux-cli-public-2026.1.1.204-3717666.deb"; \
+    curl -fL -o /tmp/nsys.deb "https://developer.download.nvidia.com/devtools/repos/ubuntu2204/amd64/${NSYS_DEB}"; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends /tmp/nsys.deb; \
+    rm -f /tmp/nsys.deb; \
+    rm -rf /var/lib/apt/lists/*; \
+    nsys --version
+
+# SET WORKDIR
+WORKDIR /workspace
+
+# Default command
+CMD ["sleep", "infinity"]
+root@LAPTOP-J66QKIMQ:/mnt/c/Users/User/MLPERF_DOCKER#
+root@LAPTOP-J66QKIMQ:/mnt/c/Users/User/MLPERF_DOCKER# ls
+docker_run.sh  dockerfile  mlperf_cache  mlperf_data  mlperf_models  mlperf_results  mlperf_scripts
+root@LAPTOP-J66QKIMQ:/mnt/c/Users/User/MLPERF_DOCKER# cat dockerfile
+# IMPORTS
+FROM nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04
+
+# SET ENVIRONMENT
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+
+# MAKE THINGS DETERMINISTIC
+ENV CUBLAS_WORKSPACE_CONFIG=:4096:8 \
+    CUDNN_DETERMINISTIC=1 \
+    PYTORCH_CUDA_ALLOC_CONF=expandable_segments:False \
+    CUDA_DEVICE_MAX_CONNECTIONS=1 \
+    CUDA_VISIBLE_DEVICES=0
+
+# INSTALL OS DEPENDANCIES
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 python3-pip python3-venv \
+    git wget curl ca-certificates \
+    build-essential \
+    nano \
+    unzip rsync \
+    libglib2.0-0 libgomp1 \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+# INSTALL PYTHON DEPENDANCIES
+RUN python3 -m pip install -U pip setuptools wheel
+
+# INSTALL PYTORCH
+RUN python3 -m pip install --no-cache-dir \
+    torch torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/cu121
+
+# INSTALL CM AUTOMATION
+RUN python3 -m pip install --no-cache-dir \
+    numpy pyyaml cmind
+
+# CM AUTOMATION
+RUN cm pull repo mlcommons@cm4mlops
+
+ENV CM_GIT_CHECKOUT=v4.1
+
+RUN git clone -b v4.1 --depth 1 https://github.com/mlcommons/inference.git /opt/mlperf_inference
+
+ENV CM_MLPERF_INFERENCE_SRC=/opt/mlperf_inference
+
+# PATCH PYTHON VARIABLE MISMATCH ERROR
+RUN python3 - <<'PY'
+import pathlib
+p = pathlib.Path("/root/CM/repos/mlcommons@cm4mlops/automation/script/module.py")
+txt = p.read_text()
+txt = txt.replace("','.join(meta['tags'])",
+                  "','.join([str(t) for t in meta.get('tags', [])])")
+p.write_text(txt)
+print("Patched", p)
+PY
+
+# NSIGHT SYSTEM CLI
+RUN set -eux; \
+    NSYS_DEB="NsightSystems-linux-cli-public-2026.1.1.204-3717666.deb"; \
+    curl -fL -o /tmp/nsys.deb "https://developer.download.nvidia.com/devtools/repos/ubuntu2204/amd64/${NSYS_DEB}"; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends /tmp/nsys.deb; \
+    rm -f /tmp/nsys.deb; \
+    rm -rf /var/lib/apt/lists/*; \
+    nsys --version
+
+# SET WORKDIR
+WORKDIR /workspace
+
+# Default command
+CMD ["sleep", "infinity"]
