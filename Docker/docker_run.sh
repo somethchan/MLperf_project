@@ -7,4 +7,4 @@ docker run -it --gpus all \
   -v $(pwd)/mlperf_chace:/cache \
   -v $(pwd)/mlperf_scripts:/scripts \
   -w /workspace \
-  f9e7195e2020 bash
+  9f9674976a12 bash
