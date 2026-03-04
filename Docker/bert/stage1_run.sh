@@ -11,7 +11,8 @@ for i in 1 2 3 4 5; do
     --scenario=Offline \
     --execution_mode=test \
     --device=cuda \
-    --docker \
+    --docker=no \
+    --quiet
     --test_query_count=1000
 
   # find newest MLPerf summary log
