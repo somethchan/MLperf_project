@@ -12,7 +12,7 @@ for i in 1 2 3 4 5; do
     --execution_mode=test \
     --device=cuda \
     --docker \
-    --test_query_count=100
+    --test_query_count=1000
 
   # find newest MLPerf summary log
   latest_summary=$(find ~ -name mlperf_log_summary.txt 2>/dev/null | xargs ls -t | head -n 1)
