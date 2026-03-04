@@ -1,3 +1,4 @@
+set -euo pipefail
 nvidia-smi
 
 sudo apt-get update
