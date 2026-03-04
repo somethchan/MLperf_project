@@ -1,9 +1,27 @@
-mkdir -p stage1_bert_offline_logs
+#!/usr/bin/env bash
+set -euo pipefail
 
-for i in 1 2 3 4 5; do
+# Force non-interactive CM/CR behavior
+export CM_DOCKER_IT=0
+export CM_DOCKER_INTERACTIVE=no
+export CM_QUIET=yes
+
+OUT=stage1_bert_offline_logs
+RUNS=5
+QCOUNT=1000
+TAG="_r4.1-dev"
+
+rm -rf "$OUT"
+mkdir -p "$OUT"
+
+for i in $(seq 1 $RUNS); do
   echo "========== RUN $i =========="
 
-  cr run-mlperf,inference,_find-performance,_full,_r4.1-dev \
+  run_out="$OUT/run_$i"
+  rm -rf "$run_out"
+  mkdir -p "$run_out"
+
+  cr run-mlperf,inference,_find-performance,_full,${TAG} \
     --model=bert-99 \
     --implementation=reference \
     --framework=pytorch \
@@ -11,19 +29,15 @@ for i in 1 2 3 4 5; do
     --scenario=Offline \
     --execution_mode=test \
     --device=cuda \
-    --docker=no \
-    --quiet
-    --test_query_count=1000
-
-  # find newest MLPerf summary log
-  latest_summary=$(find ~ -name mlperf_log_summary.txt 2>/dev/null | xargs ls -t | head -n 1)
-  latest_dir=$(dirname "$latest_summary")
-
-  echo "Latest log dir: $latest_dir"
-
-  mkdir -p stage1_bert_offline_logs/run_$i
-  cp -r "$latest_dir/"* stage1_bert_offline_logs/run_$i/
+    --docker \
+    --docker_it=0 \
+    --quiet \
+    --test_query_count="$QCOUNT" \
+    --output_dir="$run_out"
 
   echo "Result for run $i:"
-  grep "Result is" stage1_bert_offline_logs/run_$i/mlperf_log_summary.txt || true
+  grep "Result is" "$run_out/mlperf_log_summary.txt" || true
 done
+
+echo "Done."
+sha256sum "$OUT"/run_*/mlperf_log_summary.txt
