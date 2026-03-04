@@ -1,0 +1,10 @@
+cr run-mlperf,inference,_find-performance,_full,_r4.1-dev \
+  --model=bert-99 \
+  --implementation=reference \
+  --framework=pytorch \
+  --category=edge \
+  --scenario=Offline \
+  --execution_mode=test \
+  --device=cuda \
+  --docker \
+  --test_query_count=100
