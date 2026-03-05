@@ -1,0 +1,4 @@
+no interactive shell:
+
+sed -i 's/if is_true(env.get('\''MLC_DOCKER_INTERACTIVE_MODE'\''.*:/if False:/' \
+  ~/MLC/repos/mlcommons@mlperf-automations/script/run-docker-container/customize.py
