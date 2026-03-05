@@ -10,5 +10,11 @@ find stage1_bert_offline_logs -name "mlperf_log_summary.txt" | sort | while read
   grep -E "99th|95th|90th|50th|Mean|Result is" "$f"
 done
 
-Get means:
-find stage1_bert_offline_logs -name "mlperf_log_summary.txt" | sort | xargs grep "99th" | awk '{sum+=$NF; n++} END {print "Avg 99th latency:", sum/n}'
+to ignore:
+
+PCIe transfers
+CPU synchronization
+framework overhead
+benchmark harness overhead
+
+also ncu is wrapped outside of the CR container
