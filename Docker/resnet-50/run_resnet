@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+OUT=stage1_resnet50_offline_logs
+RUNS=6
+QCOUNT=1024
+TAG="_r4.1-dev"
+rm -rf "$OUT"
+mkdir -p "$OUT"
+for i in $(seq 1 "$RUNS"); do
+  echo "========== RUN $i =========="
+  run_out="$OUT/run_$i"
+  rm -rf "$run_out"
+  mkdir -p "$run_out"
+  cr run-mlperf,inference,_find-performance,_full,${TAG} \
+    --model=resnet50 \
+    --implementation=reference \
+    --framework=pytorch \
+    --category=edge \
+    --scenario=Offline \
+    --execution_mode=test \
+    --device=cuda \
+    --docker \
+    --quiet \
+    --test_query_count="$QCOUNT" \
+    --output_dir="$run_out"
+  echo "Result for run $i:"
+  grep -h "Result is" "$run_out"/mlperf_log_summary.txt 2>/dev/null || true
+done
