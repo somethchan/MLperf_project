@@ -2,3 +2,13 @@ no interactive shell:
 
 sed -i 's/if is_true(env.get('\''MLC_DOCKER_INTERACTIVE_MODE'\''.*:/if False:/' \
   ~/MLC/repos/mlcommons@mlperf-automations/script/run-docker-container/customize.py
+
+Get percentiles:
+
+find stage1_bert_offline_logs -name "mlperf_log_summary.txt" | sort | while read f; do
+  echo "=== $f ==="
+  grep -E "99th|95th|90th|50th|Mean|Result is" "$f"
+done
+
+Get means:
+find stage1_bert_offline_logs -name "mlperf_log_summary.txt" | sort | xargs grep "99th" | awk '{sum+=$NF; n++} END {print "Avg 99th latency:", sum/n}'
