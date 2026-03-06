@@ -4,10 +4,19 @@ OUT=stage1_resnet50_offline_logs
 RUNS=6
 QCOUNT=1024
 TAG="_r4.1-dev"
+
+patch_caffe2() {
+  find ~/MLC/repos -name "backend_pytorch.py" -path "*/classification_and_detection/*" 2>/dev/null | \
+  while read f; do
+    sed -i "s/^import caffe2.python.onnx.backend/#import caffe2.python.onnx.backend/" "$f"
+  done
+}
+
 rm -rf "$OUT"
 mkdir -p "$OUT"
 for i in $(seq 1 "$RUNS"); do
   echo "========== RUN $i =========="
+  patch_caffe2  # patch before every run, handles new cache hashes safely
   run_out="$OUT/run_$i"
   rm -rf "$run_out"
   mkdir -p "$run_out"
