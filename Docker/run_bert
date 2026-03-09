@@ -1,10 +1,13 @@
-cr run-mlperf,inference,_find-performance,_full,_r4.1-dev \
-  --model=bert-99 \
-  --implementation=reference \
-  --framework=pytorch \
-  --category=edge \
+sudo -E ML_MODEL_FILE_WITH_PATH=/home/mlcuser/MLC/repos/local/cache/download-file_bert-large-ml-m_80be3330/model.pytorch \
+VOCAB_FILE=/home/mlcuser/MLC/repos/local/cache/download-file_bert-get-datase_7bc167da/vocab.txt \
+ncu \
+  --profile-from-start off \
+  --nvtx \
+  --metrics "sm__warps_active.avg.pct_of_peak_sustained_active,sm__throughput.avg.pct_of_peak_sustained_elapsed,sm__pipe_tensor_cycles_active.avg.pct_of_peak_sustained_active,dram__throughput.avg.pct_of_peak_sustained_elapsed,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,launch__grid_size,launch__block_size,sm__cycles_elapsed.avg" \
+  --target-processes all \
+  --export /tmp/bert_profile_v3 \
+  --force-overwrite \
+  /home/mlcuser/venv/mlcflow/bin/python3 run.py \
+  --backend=pytorch \
   --scenario=Offline \
-  --execution_mode=test \
-  --device=cuda \
-  --docker \
-  --test_query_count=100
+  --user_conf /home/mlcuser/MLC/repos/mlcommons@mlperf-automations/script/generate-mlperf-inference-user-conf/tmp/58caa273d39b40de9edb668ddd087e40.conf
